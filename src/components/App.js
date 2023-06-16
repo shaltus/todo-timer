@@ -53,7 +53,11 @@ export default class App extends Component {
     this.setState(({ todoData }) => {
       const index = todoData.findIndex((el) => el.id === id);
       const oldData = todoData[index];
-      const newData = { ...oldData, edit: !oldData.edit, description: event.target[0].value };
+      const newData = {
+        ...oldData,
+        edit: !oldData.edit,
+        description: event.target[0].value,
+      };
       const newArray = [...todoData.slice(0, index), newData, ...todoData.slice(index + 1)];
       return {
         todoData: newArray,
