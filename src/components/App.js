@@ -20,12 +20,13 @@ export default class App extends Component {
     });
   };
 
-  addItem = (text) => {
+  addItem = (text, timerSec) => {
     const newItem = {
       description: text,
       completed: false,
       id: this.maxId++,
       time: new Date(),
+      timer: timerSec,
     };
 
     this.setState(({ todoData }) => {
@@ -95,6 +96,21 @@ export default class App extends Component {
   onFilterChange = (filter) => {
     this.setState({ filter });
   };
+  changeTimerValue = (id, value) => {
+    this.setState(({ todoData }) => {
+      const index = todoData.findIndex((el) => {
+        return el.id === id;
+      });
+      const oldItem = todoData[index];
+      if (typeof oldItem === 'undefined') return;
+      const newItem = { ...oldItem, timer: value };
+      const newArray = [...todoData.slice(0, index), newItem, ...todoData.slice(index + 1)];
+
+      return {
+        todoData: newArray,
+      };
+    });
+  };
 
   render() {
     const { todoData, filter } = this.state;
@@ -110,6 +126,7 @@ export default class App extends Component {
             onToggleCompleted={this.onToggleCompleted}
             editTask={this.editTask}
             onSubmitEdit={this.onSubmitEdit}
+            changeTimerValue={this.changeTimerValue}
           />
           <Footer
             completedCount={completedCount}

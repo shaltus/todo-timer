@@ -4,13 +4,14 @@ import { formatDistanceToNow } from 'date-fns';
 
 import Task from './task';
 
-const TaskList = ({ todos, onDeleted, onToggleCompleted, editTask, onSubmitEdit }) => {
+const TaskList = ({ todos, onDeleted, onToggleCompleted, editTask, onSubmitEdit, changeTimerValue }) => {
   TaskList.defaultProps = {
     todos: [],
     onDeleted: () => {},
     onToggleCompleted: () => {},
     editTask: () => {},
     onSubmitEdit: () => {},
+    changeTimerValue: () => {},
   };
 
   TaskList.propTypes = {
@@ -19,6 +20,7 @@ const TaskList = ({ todos, onDeleted, onToggleCompleted, editTask, onSubmitEdit 
     onToggleCompleted: PropTypes.func,
     editTask: PropTypes.func,
     onSubmitEdit: PropTypes.func,
+    changeTimerValue: PropTypes.func,
   };
   return (
     <ul className="todo-list">
@@ -31,6 +33,8 @@ const TaskList = ({ todos, onDeleted, onToggleCompleted, editTask, onSubmitEdit 
           editTask={() => editTask(id)}
           onSubmitEdit={(event) => onSubmitEdit(event, id)}
           time={formatDistanceToNow(time, { includeSeconds: true })}
+          changeTimerValue={(id, value) => changeTimerValue(id, value)}
+          timer={item.timer}
           {...item}
         />
       ))}
