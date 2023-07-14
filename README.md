@@ -1,3 +1,2 @@
-
-todo-timer-shaltus.vercel.app
+https://todo-timer-shaltus.vercel.app/
 
