@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { formatDistanceToNow } from 'date-fns';
 
-import Task from './task';
+import ParentTask from './ParentTask';
 
 const TaskList = ({ todos, onDeleted, onToggleCompleted, editTask, onSubmitEdit, changeTimerValue }) => {
   TaskList.defaultProps = {
@@ -25,7 +25,7 @@ const TaskList = ({ todos, onDeleted, onToggleCompleted, editTask, onSubmitEdit,
   return (
     <ul className="todo-list">
       {todos.map(({ id, description, time, ...item }) => (
-        <Task
+        <ParentTask
           key={id}
           description={description}
           onDeleted={() => onDeleted(id)}
@@ -34,7 +34,7 @@ const TaskList = ({ todos, onDeleted, onToggleCompleted, editTask, onSubmitEdit,
           onSubmitEdit={(event) => onSubmitEdit(event, id)}
           time={formatDistanceToNow(time, { includeSeconds: true })}
           changeTimerValue={(id, value) => changeTimerValue(id, value)}
-          timer={item.timer}
+          id={id}
           {...item}
         />
       ))}

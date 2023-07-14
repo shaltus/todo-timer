@@ -96,6 +96,7 @@ export default class App extends Component {
   onFilterChange = (filter) => {
     this.setState({ filter });
   };
+
   changeTimerValue = (id, value) => {
     this.setState(({ todoData }) => {
       const index = todoData.findIndex((el) => {

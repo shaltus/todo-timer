@@ -4,31 +4,34 @@ import React, { Component } from 'react';
 export default class Task extends Component {
   state = {
     value: this.props.description,
-    timer: this.props.timer,
-    pause: false,
+    originalValue: this.props.description,
   };
 
-  timer = () => {
-    this.interval = setInterval(() => {
-      if (!this.state.pause) {
-        this.setState({ timer: this.state.timer - 1 });
-      }
-    }, 1000);
-  };
-
-  timerRun = () => {
-    const { pause, timer } = this.state;
-    if (pause) this.setState({ timer: timer - 1 });
-  };
   componentDidMount() {
-    this.timer();
+    document.addEventListener('click', this.handleClickOutside.bind(this), true);
+    document.addEventListener('keydown', this.handleKeyDown.bind(this), true);
   }
 
   componentWillUnmount() {
-    const { id, changeTimerValue } = this.props;
+    document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
 
-    clearInterval(this.interval);
-    changeTimerValue(id, this.state.timer);
+  handleKeyDown(event) {
+    if (event.key === 'Escape' && this.props.edit) {
+      this.setState({ value: this.state.originalValue });
+      this.props.editTask(this.props.id, this.state.originalValue);
+    }
+  }
+
+  handleClickOutside(event) {
+    const editNode = document.querySelector('.editing');
+    if (editNode) {
+      if (!editNode.contains(event.target) && this.props.edit) {
+        this.setState({ value: this.state.originalValue });
+        this.props.editTask(this.props.id, this.state.originalValue);
+      }
+    }
   }
 
   setTaskValue = (event) => {
@@ -36,26 +39,22 @@ export default class Task extends Component {
       value: event.target.value,
     });
   };
-  timerSet = () => {
-    const { timer } = this.state;
-
-    if (timer < 0) return '00:00';
-    return `${Math.floor(timer / 60)
-      .toString()
-      .padStart(2, '0')}:${Math.floor(timer % 60)
-      .toString()
-      .padStart(2, '0')}`;
-  };
-  onPlay = () => {
-    this.setState({ pause: false });
-  };
-
-  onPause = () => {
-    this.setState({ pause: true });
-  };
 
   render() {
-    const { edit, description, time, onDeleted, onToggleCompleted, editTask, completed, id, onSubmitEdit } = this.props;
+    const {
+      edit,
+      description,
+      time,
+      onDeleted,
+      onToggleCompleted,
+      editTask,
+      completed,
+      id,
+      onSubmitEdit,
+      onPlay,
+      onPause,
+      timerSet,
+    } = this.props;
     return edit ? (
       <li className="editing">
         <form onSubmit={onSubmitEdit}>
@@ -69,9 +68,9 @@ export default class Task extends Component {
           <label htmlFor={id}>
             <span className="title">{description}</span>
             <span className="description">
-              <button className="icon icon-play" onClick={this.onPlay}></button>
-              <button className="icon icon-pause" onClick={this.onPause}></button>
-              <span className="timer">{this.timerSet()}</span>
+              <button className="icon icon-play" onClick={onPlay}></button>
+              <button className="icon icon-pause" onClick={onPause}></button>
+              <span className="timer">{timerSet}</span>
             </span>
             <span className="description">created {time}</span>
           </label>

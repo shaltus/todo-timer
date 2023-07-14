@@ -5,7 +5,7 @@ export default class NewTaskForm extends Component {
   static defaultProps = {
     addItem: () => {},
   };
-  
+
   static propTypes = {
     addItem: PropTypes.func,
   };
